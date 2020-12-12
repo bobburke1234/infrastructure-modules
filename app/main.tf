@@ -1,3 +1,6 @@
+provider "aws" {
+    region = var.region
+}
 data "aws_ami" "ami" {
   owners           = ["amazon"]
   most_recent = true
@@ -9,4 +12,5 @@ data "aws_ami" "ami" {
 }
 resource "aws_instance" "myec2" {
     ami = data.aws_ami.ami.id
+    instance_type = var.instance_type
 }
