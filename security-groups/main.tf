@@ -5,16 +5,8 @@ terraform {
 
 locals {
   #Extract the VPC information from the VPC module
-  vpc_cidr = var.vpc_cidr_block 
+  vpc_cidr_block = var.vpc_cidr_block 
   vpc_id = var.vpc_id
-}
-
-# Access the VPC info ( Name = training-vpc )
-data "aws_vpc" "vpc" {
-    filter {
-        name = "cidr"
-        values = [local.vpc_cidr]
-    }
 }
 
 resource "aws_security_group" "worker_group_mgmt_one" {

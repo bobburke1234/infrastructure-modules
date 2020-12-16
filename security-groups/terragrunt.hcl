@@ -6,9 +6,15 @@ dependencies {
 }
 dependency "vpc" {
   config_path = "../vpc"
+
+  mock_outputs_allowed_terraform_commands = ["validate","plan"]
+  
+  mock_outputs = {
+    vpc_id = "fake_id"
+    vpc_cidr_block  = "fake_cidr_block"
+  }
 }
 inputs = {
-  vpc_id = dependency.vpc.outputs.vpc.vpc_id
-  vpc_cidr_block = dependency.vpc.outputs.vpc.vpc_cidr_block
-  region = dependency.vpc.outputs.region
+  vpc_id = dependency.vpc.outputs.id
+  vpc_cidr_block = dependency.vpc.outputs.cidr_block
 }

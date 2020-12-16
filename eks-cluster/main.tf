@@ -10,21 +10,10 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
 }
 
-#normalize inputs
+#normalize inputs from terragrunt inputs
 locals {
   vpc_id = var.vpc_id
-  vpc_pr_cidrs = var.vpc_private_subnets_cidr_blocks
-
-  subnet_ids = [
-    for subnet in data.aws_subnet.subnets:
-      subnet.id
-  ]
-}
-
-# Access the subnet ids
-data "aws_subnet" "subnets" {
-  count = length(local.vpc_pr_cidrs)
-  cidr_block = local.vpc_pr_cidrs[count.index]
+  vpc_subnet_ids = jsondecode(var.vpc_private_subnets_ids)
 }
 
 # Access the security groups to be used
@@ -50,7 +39,7 @@ module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = var.eks_cluster_name
   cluster_version = "1.17"
-  subnets         = local.subnet_ids
+  subnets         = local.vpc_subnet_ids
 
   tags = var.eks_cluster.tags
 
