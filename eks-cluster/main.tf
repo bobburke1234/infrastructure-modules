@@ -13,7 +13,7 @@ provider "kubernetes" {
 #normalize inputs
 locals {
   vpc_id = var.vpc_id
-  vpc_pr_cidrs = var.vpc_private_subnet_cidr_blocks
+  vpc_pr_cidrs = var.vpc_private_subnets_cidr_blocks
 
   subnet_ids = [
     for subnet in data.aws_subnet.subnets:
