@@ -13,7 +13,7 @@ provider "kubernetes" {
 #normalize inputs from terragrunt inputs
 locals {
   vpc_id = var.vpc_id
-  vpc_subnet_ids = jsondecode(var.vpc_private_subnets_ids)
+  vpc_subnet_ids = jsondecode(var.vpc_private_subnet_ids)
 }
 
 # Access the security groups to be used

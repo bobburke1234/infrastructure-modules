@@ -21,10 +21,13 @@ dependency "vpc" {
 dependency "security-groups" {
     config_path = "../security-groups"
 
-    skip_outputs = true 
-
     mock_outputs = {
-        dummy = {}
+        worker_group_1 = ({
+          id = "fake_id"
+        })
+        worker_group_2 = ({
+          id = "fake_id"
+        })
     }
   }
 
@@ -32,4 +35,6 @@ inputs = {
   vpc_id = dependency.vpc.outputs.id
   vpc_private_subnet_ids = dependency.vpc.outputs.private_subnets_ids
   eks_cluster_name = dependency.vpc.outputs.eks_cluster_name
+  sg_wg_1_id = dependency.security-groups.outputs.worker_group_1.id
+  sg_wg_2_id = dependency.security-groups.outputs.worker_group_2.id
 }

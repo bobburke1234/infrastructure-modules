@@ -1,4 +1,4 @@
-region = "us-east-2"
+
 
 #EKS Cluster is restricted to two work
 eks_cluster = ({
