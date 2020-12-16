@@ -1,12 +1,17 @@
 
-provider "aws" {
-  region  = var.region
+terraform {
+  backend "s3" {}
 }
 
 data "aws_availability_zones" "available" {}
 
+resource "random_string" "suffix" {
+  length  = 8
+  special = false
+}
+
 locals {
-  cluster_name = var.vpc.eks_cluster_name
+  eks_cluster_name = "training-eks-${random_string.suffix.result}"
 }
 
 module "vpc" {
@@ -23,16 +28,16 @@ module "vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared",
+    "kubernetes.io/cluster/${local.eks_cluster_name}" = "shared",
   }
 
   public_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/cluster/${local.eks_cluster_name}" = "shared"
     "kubernetes.io/role/elb"                      = "1"
   }
 
   private_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/cluster/${local.eks_cluster_name}" = "shared"
     "kubernetes.io/role/internal-elb"             = "1"
   }
 }

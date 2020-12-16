@@ -5,6 +5,12 @@ output "region" {
 }
 
 output "vpc" {
-  description = "VPC"
+  description = "The entire VPC definition."
   value = module.vpc
 }
+output "eks_cluster_name" {
+  value = local.eks_cluster_name
+}
+
+
+

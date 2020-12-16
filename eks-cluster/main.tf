@@ -1,6 +1,6 @@
 
-provider "aws" {
-  region  = var.region
+terraform {
+  backend "s3" {}
 }
 
 provider "kubernetes" {
@@ -10,17 +10,26 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
 }
 
-# Access the VPC info (using cidr match)
-data "aws_vpc" "vpc" {
-    filter {
-        name = "cidr"
-        values = [var.vpc.cidr]
-    }
+#normalize inputs
+locals {
+  vpc_id = var.vpc_id
+  vpc_pr_cidrs = var.vpc_private_subnet_cidr_blocks
+
+  subnet_ids = [
+    for subnet in data.aws_subnet.subnets:
+      subnet.id
+  ]
+}
+
+# Access the subnet ids
+data "aws_subnet" "subnets" {
+  count = length(local.vpc_pr_cidrs)
+  cidr_block = local.vpc_pr_cidrs[count.index]
 }
 
 # Access the security groups to be used
 data "aws_security_group" "worker_group_mgmt_one" {
-  vpc_id = data.aws_vpc.vpc.id
+  vpc_id = local.vpc_id
 
   filter {
     name = "group-name"
@@ -29,7 +38,7 @@ data "aws_security_group" "worker_group_mgmt_one" {
 }
 
 data "aws_security_group" "worker_group_mgmt_two" {
-  vpc_id = data.aws_vpc.vpc.id
+  vpc_id = local.vpc_id
 
   filter {
     name = "group-name"
@@ -37,28 +46,15 @@ data "aws_security_group" "worker_group_mgmt_two" {
   }
 }
 
-# Access the subnet ids
-data "aws_subnet" "subnets" {
-  count = length(var.vpc.private_subnets)
-  cidr_block = var.vpc.private_subnets[count.index]
-}
-
-locals {
-  subnet_ids = [
-    for subnet in data.aws_subnet.subnets:
-      subnet.id
-  ]
-}
-
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = var.vpc.eks_cluster_name
+  cluster_name    = var.eks_cluster_name
   cluster_version = "1.17"
   subnets         = local.subnet_ids
 
   tags = var.eks_cluster.tags
 
-  vpc_id = data.aws_vpc.vpc.id
+  vpc_id = local.vpc_id
 
   worker_groups = [
     {

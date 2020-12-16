@@ -1,12 +1,12 @@
-variable "region" {
-    type = string
-}
+variable "region" {}
+variable "vpc_id" {}
+variable "vpc_private_subnets_cidr_blocks" {}
 
-#EKS Cluster depends on VPC and Security Groups being setup
-variable "vpc" {}
 
 
 #Define an EKS object
+variable "eks_cluster_name" {}
+
 variable "eks_cluster" {
   type = object ({
     cluster_name = string
