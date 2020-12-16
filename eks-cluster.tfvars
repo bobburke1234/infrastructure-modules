@@ -1,7 +1,6 @@
 region = "us-east-2"
 
 #EKS Cluster is restricted to two work
-eks_cluster_name = "training-cluster"
 eks_cluster = ({
     cluster_name = "test"
     subnets = ["10.0.0.0./8"]
