@@ -1,6 +1,6 @@
 variable "region" {}
 variable "vpc_id" {}
-variable "vpc_private_subnet_cidr_blocks" {}
+variable "vpc_private_subnets_cidr_blocks" {}
 
 
 
