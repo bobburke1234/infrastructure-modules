@@ -16,25 +16,6 @@ locals {
   vpc_subnet_ids = jsondecode(var.vpc_private_subnet_ids)
 }
 
-# Access the security groups to be used
-data "aws_security_group" "worker_group_mgmt_one" {
-  vpc_id = local.vpc_id
-
-  filter {
-    name = "group-name"
-    values = ["worker_group_mgmt_one*"]
-  }
-}
-
-data "aws_security_group" "worker_group_mgmt_two" {
-  vpc_id = local.vpc_id
-
-  filter {
-    name = "group-name"
-    values = ["worker_group_mgmt_two*"]
-  }
-}
-
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = var.eks_cluster_name
@@ -51,14 +32,14 @@ module "eks" {
       instance_type                 = var.eks_cluster.worker_groups[0].instance_type
       additional_userdata           = "echo foo bar"
       asg_desired_capacity          = var.eks_cluster.worker_groups[0].asg_desired_capacity
-      additional_security_group_ids = [data.aws_security_group.worker_group_mgmt_one.id]
+      additional_security_group_ids = [var.sg_wg_1_id]
     },
     {
       name                          = var.eks_cluster.worker_groups[1].name
       instance_type                 = var.eks_cluster.worker_groups[1].instance_type
       additional_userdata           = "echo foo bar"
       asg_desired_capacity          = var.eks_cluster.worker_groups[1].asg_desired_capacity
-      additional_security_group_ids = [data.aws_security_group.worker_group_mgmt_two.id]
+      additional_security_group_ids = [var.sg_wg_2_id]
     },
   ]
 }

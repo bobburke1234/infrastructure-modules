@@ -16,7 +16,7 @@ output "private_subnets_cidr_blocks" {
 
 output "private_subnets_ids" {
   description = "The vpc private subnet ids"
-  value = module.vpc.private_subnet_ids
+  value = module.vpc.private_subnets
 }
 
 output "eks_cluster_name" {
