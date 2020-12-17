@@ -12,19 +12,19 @@ provider "kubernetes" {
 
 #normalize inputs from terragrunt inputs
 locals {
-  vpc_id = var.vpc_id
-  vpc_subnet_ids = jsondecode(var.vpc_private_subnet_ids)
+  sgrps = jsondecode(var.sgrps)
+  vpc = jsondecode(var.vpc)
 }
 
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = var.eks_cluster_name
   cluster_version = "1.17"
-  subnets         = local.vpc_subnet_ids
+  subnets         = local.vpc.private_subnet_ids
 
   tags = var.eks_cluster.tags
 
-  vpc_id = local.vpc_id
+  vpc_id = local.vpc.id
 
   worker_groups = [
     {
@@ -32,14 +32,14 @@ module "eks" {
       instance_type                 = var.eks_cluster.worker_groups[0].instance_type
       additional_userdata           = "echo foo bar"
       asg_desired_capacity          = var.eks_cluster.worker_groups[0].asg_desired_capacity
-      additional_security_group_ids = [var.sg_wg_1_id]
+      additional_security_group_ids = [local.sgrps.worker_groups[0].id]
     },
     {
       name                          = var.eks_cluster.worker_groups[1].name
       instance_type                 = var.eks_cluster.worker_groups[1].instance_type
       additional_userdata           = "echo foo bar"
       asg_desired_capacity          = var.eks_cluster.worker_groups[1].asg_desired_capacity
-      additional_security_group_ids = [var.sg_wg_2_id]
+      additional_security_group_ids = [local.sgrps.worker_groups[1].id]
     },
   ]
 }

@@ -1,13 +1,34 @@
+
+
+locals {
+  environment = "dev"
+  aws_region  = "us-east-2"
+}
+
 remote_state {
   backend = "s3"
   config = {
-    bucket         = "my-terraform-state-123612"
-    key            = "${path_relative_to_include()}/terraform.tfstate"
-    region         = "us-east-2"
+    bucket         = "bobby-terraform-state-123612"
+    region         = "${local.aws_region}"
+    dynamodb_table = "training-terraform"
     encrypt        = true
-    dynamodb_table = "my-lock-table"
+
+    key = "${local.aws_region}/${path_relative_to_include()}"
+
+    s3_bucket_tags = {
+      owner       = "training"
+      name        = "traing-state"
+      environment = "${local.environment}"
+    }
+
+    dynamodb_table_tags = {
+      owner       = "training"
+      name        = "training-state"
+      environment = "${local.environment}"
+    }
   }
 }
+
 generate "provider" {
   path      = "provider.tf"
   if_exists = "overwrite"

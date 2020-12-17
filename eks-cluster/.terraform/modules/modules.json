@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"eks.node_groups","Source":"./modules/node_groups","Dir":".terraform/modules/eks/modules/node_groups"},{"Key":"","Source":"","Dir":"."},{"Key":"eks","Source":"terraform-aws-modules/eks/aws","Version":"13.2.1","Dir":".terraform/modules/eks"},{"Key":"eks.fargate","Source":"./modules/fargate","Dir":".terraform/modules/eks/modules/fargate"}]}

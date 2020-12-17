@@ -1,5 +1,4 @@
-
-
+region = "us-east-1"
 #EKS Cluster is restricted to two work
 eks_cluster = ({
     cluster_name = "test"

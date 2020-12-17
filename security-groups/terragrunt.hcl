@@ -12,7 +12,6 @@ dependency "vpc" {
   mock_outputs = {
     vpc = ({
       id = "fake-id"
-      cidr_block = "fake-cidr"
     })
   }
 }

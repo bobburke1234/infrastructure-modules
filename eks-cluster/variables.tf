@@ -1,10 +1,8 @@
 
 #Input passed through modules via terragrunt
-variable "vpc_id" {}
-variable "vpc_private_subnet_ids" {}
-variable "sg_wg_1_id" {}
-variable "sg_wg_2_id" {}
-
+variable "vpc" {}
+variable "sgrps" {}
+variable "region" {}
 
 #Input passed through via tfvars.
 variable "eks_cluster_name" {}
