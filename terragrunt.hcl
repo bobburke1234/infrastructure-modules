@@ -2,18 +2,21 @@
 
 locals {
   environment = "dev"
-  aws_region  = "us-east-2"
+  aws_region  = "us-west-2"
 }
 
 remote_state {
   backend = "s3"
   config = {
-    bucket         = "bobby-terraform-state-123612"
+    bucket         = "${local.aws_region}-terraform-state-bi-123612"
     region         = "${local.aws_region}"
     dynamodb_table = "training-terraform"
     encrypt        = true
+    
+    
 
-    key = "${local.aws_region}/${path_relative_to_include()}"
+
+    key = "${local.environment}/${local.aws_region}/${path_relative_to_include()}"
 
     s3_bucket_tags = {
       owner       = "training"
@@ -34,7 +37,7 @@ generate "provider" {
   if_exists = "overwrite"
   contents = <<EOF
 provider "aws" {
-  region              = "us-east-2"
+  region              = "us-west-2"
 }
 EOF
 }
