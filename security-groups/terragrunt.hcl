@@ -10,11 +10,12 @@ dependency "vpc" {
   mock_outputs_allowed_terraform_commands = ["validate","plan"]
   
   mock_outputs = {
-    vpc_id = "fake_id"
-    vpc_cidr_block  = "fake_cidr_block"
+    vpc = ({
+      id = "fake-id"
+      cidr_block = "fake-cidr"
+    })
   }
 }
 inputs = {
-  vpc_id = dependency.vpc.outputs.id
-  vpc_cidr_block = dependency.vpc.outputs.cidr_block
+  vpc  = dependency.vpc.outputs.vpc
 }

@@ -1,4 +1,3 @@
-region = "us-east-2"
 
 vpc = ({
     name = "training-vpc"

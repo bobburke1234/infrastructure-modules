@@ -1,9 +1,3 @@
-variable "region" {
-  type = string
-  default     = "us-east-2"
-  description = "Default VPC AWS region"
-}
-
 variable "vpc" {
   type = object ({
     name = string
